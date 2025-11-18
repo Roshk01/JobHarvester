@@ -6,6 +6,10 @@ import pandas as pd
 st.set_page_config(page_title="JobHarvester", layout="wide")
 st.title("JobHarvester 🔍")
 
+# 🔐 Read secrets from .streamlit/secrets.toml
+APP_ID = st.secrets["APP_ID"]
+APP_KEY = st.secrets["APP_KEY"]
+
 # ========== Top Filters ==========
 col1, col2, col3 = st.columns([2, 2, 1])
 
@@ -48,7 +52,8 @@ def extract_experience(text: str):
 
 # ========== Main Logic ==========
 if search_clicked:
-    data = fetch_jobs(job_title, location, results_per_page)
+    # 🔑 pass APP_ID + APP_KEY from Streamlit secrets
+    data = fetch_jobs(job_title, location, results_per_page, app_id=APP_ID, app_key=APP_KEY)
 
     # Debug helper: always allow you to inspect raw data
     with st.expander("Raw API response (debug)"):

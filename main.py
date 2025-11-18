@@ -1,24 +1,25 @@
 import os
 import requests
-from dotenv import load_dotenv
 
-load_dotenv()
-
-APP_ID = os.getenv("APP_ID")
-APP_KEY = os.getenv("APP_KEY")
-
-BASE_URL = "https://api.adzuna.com/v1/api/jobs/in/search/1"
+BASE_URL = "https://api.adzuna.com/v1/api/jobs/in/search"
 
 
-def fetch_jobs(job_title: str, location: str, results_per_page: int = 20, page: int = 1):
-    if not APP_ID or not APP_KEY:
-        return {"error": "Missing APP_ID or APP_KEY in environment (.env)"}
+def fetch_jobs(job_title: str, location: str, results_per_page: int = 20, page: int = 1,
+               app_id: str | None = None, app_key: str | None = None):
+    # Fallback to environment variables if not provided
+    if app_id is None:
+        app_id = os.getenv("APP_ID")
+    if app_key is None:
+        app_key = os.getenv("APP_KEY")
 
-    url = f"https://api.adzuna.com/v1/api/jobs/in/search/{page}"
+    if not app_id or not app_key:
+        return {"error": "Missing APP_ID or APP_KEY (provide via Streamlit secrets or environment variables)."}
+
+    url = f"{BASE_URL}/{page}"
 
     params = {
-        "app_id": APP_ID,
-        "app_key": APP_KEY,
+        "app_id": app_id,
+        "app_key": app_key,
         "results_per_page": results_per_page,
         "what": job_title,
         "where": location,
@@ -30,4 +31,3 @@ def fetch_jobs(job_title: str, location: str, results_per_page: int = 20, page: 
         return res.json()
     except requests.RequestException as e:
         return {"error": f"Failed to fetch jobs: {e}"}
-
