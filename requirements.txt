@@ -1,0 +1,8 @@
+os
+streamlit
+requests
+pandas
+datetime
+typing
+dotenv
+serpapi
