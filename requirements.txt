@@ -1,7 +1,5 @@
+google-search-results
 streamlit
 requests
 pandas
-datetime
-typing
-dotenv
-serpapi
+python-dotenv
